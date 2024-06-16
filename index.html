@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Multimodal Movies</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+    <style>
+        .movie-poster {
+            position: relative;
+            transition: transform 0.3s;
+        }
+        .movie-poster::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.5rem;
+            border: 2px solid transparent;
+            transition: border 0.3s;
+            pointer-events: none;
+        }
+        .movie-poster:hover {
+            transform: scale(1.05);
+        }
+        .movie-poster:hover::before {
+            border-color: gold;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-height: 80%;
+            background-color: white;
+            border-radius: 0.5rem;
+            overflow-y: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .modal.open {
+            display: block;
+        }
+        .trailer-modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            padding-bottom: 45%; /* Aspect ratio 16:9 */
+            height: 0;
+            background-color: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .trailer-modal.open {
+            display: block;
+        }
+        .trailer-modal iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24" style="background:radial-gradient(125% 125% at 50% 10%, #000 40%, #63e 100%);">
+</div>
+<div class="container flex justify-center items-center py-10">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="movie-poster rounded-lg relative">
+            <img class="h-auto max-w-full rounded-lg" src="https://movies.sterkinekor.co.za/CDN/media/entity/get/FilmPosterGraphic/HO00003081?referenceScheme=HeadOffice&allowPlaceHolder=true&height=300" alt="">
+            <button class="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-blue-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    hx-get="http://localhost:8000/summary?id=tt6263850" hx-target="#modal-content" hx-trigger="click" data-id="1">Synopsis</button>
+            <button class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    onclick="openTrailer('https://www.youtube.com/embed/73_1biulkYk')">Trailer</button>
+        </div>
+        <div class="movie-poster rounded-lg relative">
+            <img class="h-auto max-w-full rounded-lg" src="https://movies.sterkinekor.co.za/CDN/media/entity/get/FilmPosterGraphic/HO00003102?referenceScheme=HeadOffice&allowPlaceHolder=true&height=300" alt="">
+            <button class="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-blue-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    hx-get="http://localhost:8000/summary?id=tt4919268" hx-target="#modal-content" hx-trigger="click" data-id="tt4919268">Synopsis</button>
+            <button class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    onclick="openTrailer('https://www.youtube.com/embed/ZTQyMmz-cQE?si=NNrNxCMxjlszKrUa')">Trailer</button>
+        </div>
+        <div class="movie-poster rounded-lg relative">
+            <img class="h-auto max-w-full rounded-lg" src="https://movies.sterkinekor.co.za/CDN/media/entity/get/FilmPosterGraphic/HO00003146?referenceScheme=HeadOffice&allowPlaceHolder=true&height=300" alt="">
+            <button class="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-blue-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    hx-get="http://localhost:8000/summary?id=tt30476486" hx-target="#modal-content" hx-trigger="click" data-id="3">Synopsis</button>
+            <button class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    onclick="openTrailer('https://www.youtube.com/embed/H51vnZt1ctU?si=0cHvqrSfToU_JMd')">Trailer</button>
+        </div>
+        <div class="movie-poster rounded-lg relative">
+            <img class="h-auto max-w-full rounded-lg" src="https://movies.sterkinekor.co.za/CDN/media/entity/get/FilmPosterGraphic/HO00002980?referenceScheme=HeadOffice&allowPlaceHolder=true&height=300" alt="">
+            <button class="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-blue-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    hx-get="http://localhost:8000/summary?id=tt11389872" hx-target="#modal-content" hx-trigger="click" data-id="4">Synopsis</button>
+            <button class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    onclick="openTrailer('https://www.youtube.com/embed/Kdr5oedn7q8?si=x-100reKAkPq2Y4b')">Trailer</button>
+        </div>
+        <div class="movie-poster rounded-lg relative">
+            <img class="h-auto max-w-full rounded-lg" src="https://movies.sterkinekor.co.za/CDN/media/entity/get/FilmPosterGraphic/HO00002979?referenceScheme=HeadOffice&allowPlaceHolder=true&height=300" alt="">
+            <button class="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-blue-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    hx-get="http://localhost:8000/summary?id=tt5779228" hx-target="#modal-content" hx-trigger="click" data-id="5">Synopsis</button>
+            <button class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    onclick="openTrailer('https://www.youtube.com/embed/IeFWNtMo1Fs?si=9tmLDz_dISJXEXT')">Trailer</button>
+        </div>
+        <div class="movie-poster rounded-lg relative">
+            <img class="h-auto max-w-full rounded-lg" src="https://movies.sterkinekor.co.za/CDN/media/entity/get/FilmPosterGraphic/HO00002984?referenceScheme=HeadOffice&allowPlaceHolder=true&height=300" alt="">
+            <button class="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-blue-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    hx-get="http://localhost:8000/summary?id=tt7959138" hx-target="#modal-content" hx-trigger="click" data-id="6">Synopsis</button>
+            <button class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-700 bg-opacity-75 text-white rounded px-4 py-2"
+                    onclick="openTrailer('https://www.youtube.com/embed/RYiN-h_Kbhs?si=XBx-_BdD3wj5YFeE')">Trailer</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div id="modal-content" class="p-4">
+        <!-- Placeholder text -->
+        <p>This is a placeholder for the Synopsis.</p>
+    </div>
+    <button onclick="document.getElementById('modal').classList.remove('open')" class="absolute top-2 right-2 text-gray-700">&times;</button>
+</div>
+
+<div id="trailer-modal" class="trailer-modal">
+    <div class="p-4">
+        <iframe id="trailer-video" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <button onclick="closeTrailer()" class="absolute top-2 right-2 text-gray-700">&times;</button>
+</div>
+
+<script>
+    document.addEventListener('htmx:afterSwap', (event) => {
+        if (event.detail.target.id === 'modal-content') {
+            document.getElementById('modal').classList.add('open');
+        }
+    });
+
+    function openTrailer(url) {
+        document.getElementById('trailer-video').src = url;
+        document.getElementById('trailer-modal').classList.add('open');
+    }
+
+    function closeTrailer() {
+        document.getElementById('trailer-modal').classList.remove('open');
+        document.getElementById('trailer-video').src = "";
+    }
+</script>
+
+</body>
+</html>
