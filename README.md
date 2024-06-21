@@ -2,7 +2,7 @@
 ## Overview
 This is a multimodal AI project that enriches movie metadata by combining movie trailers (video) and text descriptions (plot). By integrating these two data types, we create enriched metadata, specifically a comprehensive synopsis, which can enhance search and recommendation services on streaming platforms.
 ## Demo
-URL: [Multimodal Context Enrichment for Movies](multimodal-context-enrichment-production.up.railway.app)
+URL: [Multimodal Context Enrichment for Movies](https://multimodal-context-enrichment-production.up.railway.app)
 ## How does it work?
 ### Movie Trailers
 For the video modality, a sequence of image frames (video can only be processed as images by the large language model) from the trailer is passed to OpenAI's GPT-4 model for image translation. A description is created from each frame with prompting for context. A chunking strategy is implemented to adhere to token limitations. The descriptions are then combined to create an overall visual summary.
