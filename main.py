@@ -1,10 +1,13 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
 from typing import Optional
 import json
+import logging
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 # Allow all origins for simplicity
 app.add_middleware(
@@ -19,10 +22,17 @@ app.add_middleware(
 trailers = open("synopses.json", "r")
 trailers = json.load(trailers)
 
+@app.get("/")
+async def home(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="home.html"
+    )
 
 @app.get("/summary", response_class=HTMLResponse)
-async def get_summary(id):
-    summary = trailers[id]['synopsis']
+async def get_summary(id: str):
+    logging.info(f"Received request for summary with id: {id}")
+    summary = trailers.get(id, {}).get('synopsis', 'No synopsis available.')
     return f"""
     <div>
         <h2>Synopsis</h2>
@@ -33,4 +43,5 @@ async def get_summary(id):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
