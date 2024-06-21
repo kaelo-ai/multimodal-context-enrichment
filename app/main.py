@@ -7,7 +7,7 @@ import json
 import logging
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="app/templates")
 
 # Allow all origins for simplicity
 app.add_middleware(
@@ -19,7 +19,7 @@ app.add_middleware(
 )
 
 # Trailer synopsis, plot and title created using AI
-trailers = open("synopses.json", "r")
+trailers = open("app/synopses.json", "r")
 trailers = json.load(trailers)
 
 @app.get("/")
