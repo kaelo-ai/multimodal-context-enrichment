@@ -1,20 +1,16 @@
-# Use the official Python image from the Docker Hub
+#
 FROM python:3.12-slim
+#
+WORKDIR /code
 
-# Set the working directory
-WORKDIR /app
+#
+COPY ./requirements.txt /code/requirements.txt
 
-# Copy the requirements file into the container
-COPY requirements.txt requirements.txt
+#
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+#
+COPY ./app /code/app
 
-# Copy the rest of the working directory contents into the container at /app
-COPY ../UJ/Multimodal-AI-for-Movie-Metadata-Context-Enrichment .
-
-# Make port 80 available to the world outside this container
-EXPOSE 80
-
-# Run main.py when the container launches
-CMD ["python", "main.py"]
+#
+CMD ["fastapi", "run", "app/main.py", "--port", "80"]
