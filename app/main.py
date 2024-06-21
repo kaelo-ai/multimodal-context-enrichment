@@ -19,7 +19,7 @@ app.add_middleware(
 )
 
 # Trailer synopsis, plot and title created using AI
-trailers = open("../synopses.json", "r")
+trailers = open("synopses.json", "r")
 trailers = json.load(trailers)
 
 @app.get("/")
